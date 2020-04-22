@@ -9,15 +9,13 @@ int main() {
     char studentID[10];
     printf("ID \n");
     scanf("%s", studentID);
-
+    system("cls");
     char patchID[100];
 
     sprintf(patchID, "..\\grades\\%s", studentID);
     char variable[200];
     strcpy(variable, "./grades/");
     strcat(variable, studentID);
-
-    //  printf("\n\n%s",variable);
 
     struct dirent *lecture;
     DIR *patch;
@@ -36,20 +34,19 @@ int main() {
 
     printf("\n\nSELECT A MODULE : ");
     scanf("%s", moduleSelected);
-    int num = atoi(moduleSelected);
+   int num = atoi(moduleSelected);
+
     sprintf(fileModule, "grades\\%s\\%s",
             studentID, array[num]);
     FILE *file;
     file = fopen(fileModule, "r");
     char array2D[240][300];
-    int arrayint2D[128][2];
+    float arrayint2D[128][2];
     int ii = 0;
     char line[128][240];
-  //  char array3d[240][230][230];
     if (file != NULL) {
 
         while (fgets(line[ii], sizeof line, file) != NULL) {
-
 
             int iii = 0;
             char separator[] = " ";
@@ -58,15 +55,15 @@ int main() {
 
                 if (iii == 2) {
                     strcpy(array2D[ii], sentence);
-                    printf("module %s\n", array2D[ii]);
+
                 } else if (iii == 0) {
-                    int number = atoi(sentence);
+                    float number = atoi(sentence);
                     arrayint2D[ii][0] = number;
-                    printf("tab  %d\n", arrayint2D[ii][0]);
-                } else {
-                    int number = atoi(sentence);
+
+                } else  if (iii == 1) {
+                    float number = atoi(sentence);
                     arrayint2D[ii][1] = number;
-                    printf("tab2  %d\n", arrayint2D[ii][1]);
+
                 }
 
 
@@ -74,26 +71,70 @@ int main() {
                 iii++;
             }
 
-        /*    strcpy(array3d[ii][0], "hello");
-            strcpy(array3d[ii][1], " hello");
-            strcpy(array3d[ii][2], "hello");
-
-*/
             ii++;
         }
-
-
         fclose(file);
+    }
 
+    FILE *fileStudentsID;
+    fileStudentsID = fopen("grades\\studentsID.txt", "r");
+
+    char nameStudent[240][300];
+    int lineID[128];
+    int jj = 0;
+    char line2[128][240];
+    if (fileStudentsID != NULL) {
+
+        while (fgets(line2[jj], sizeof line2, fileStudentsID) != NULL) {
+
+
+            int jjj = 0;
+            char separatorID[] = "-";
+            char *sentenceID = strtok(line2[jj], separatorID);
+            while (sentenceID != NULL) {
+
+                if (jjj == 1) {
+                    strcpy(nameStudent[jj], sentenceID);
+
+                } else if (jjj == 0) {
+
+                    lineID[jj] = atoi(sentenceID);
+
+                }
+
+                sentenceID = strtok(NULL, separatorID);
+                jjj++;
+            }
+
+            jj++;
+        }
+        fclose(fileStudentsID);
+    }
+printf("\n");
+char name[128];
+  int student =  atoi(studentID);
+    for (int k = 0; k < jj; ++k) {
+
+
+        if(lineID[k] == student){
+            strcpy(name,nameStudent[k]);
+        }
 
     }
 
-    //   int lenght = strlen(line[ii]);
-    //  printf("%d",lenght);
+system("cls");
 
+       float total = 0;
+    printf("%s - %s\n\n%s\n",name,studentID,array[num]);
+   printf("Weighting     Grade Item               Grade\n");
 
-    printf("\n\n3D  ::   %s",array2D[2]);
-    printf("\n\n3D  ::   %d",arrayint2D[0][1]);
-
+    for (int j = 0; j < ii; ++j) {
+        printf(" %.0f/100",arrayint2D[j][0]);
+        printf("            %s              ",array2D[j]);
+        printf("%.2f/100\n",arrayint2D[j][1]);
+        total += (arrayint2D[j][0]/100)*arrayint2D[j][1];
+    }
+    printf("                  TOTAL               %.2f/100\n\n",total);
+    system("pause");
     return 0;
 }

@@ -1,0 +1,8 @@
+10 34 easy2 
+14 45 exam 
+9 98 exam2 
+15 27 easy3 
+10 65 easy1 
+7 23 easy2 
+12 78 exam 
+13 89 exam2 

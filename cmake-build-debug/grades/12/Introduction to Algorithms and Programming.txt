@@ -1,3 +1,0 @@
-30 70 essay1 
-40 45 essay2 
-30 52 exam
