@@ -1,0 +1,3 @@
+C:/Users/Johnny.VACA-JARAMILL/CLionProjects/grades/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/Johnny.VACA-JARAMILL/CLionProjects/grades/cmake-build-debug/CMakeFiles/grades.dir
+C:/Users/Johnny.VACA-JARAMILL/CLionProjects/grades/cmake-build-debug/CMakeFiles/edit_cache.dir
