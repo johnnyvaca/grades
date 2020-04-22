@@ -84,10 +84,7 @@ int main() {
     int jj = 0;
     char line2[128][240];
     if (fileStudentsID != NULL) {
-
         while (fgets(line2[jj], sizeof line2, fileStudentsID) != NULL) {
-
-
             int jjj = 0;
             char separatorID[] = "-";
             char *sentenceID = strtok(line2[jj], separatorID);
@@ -135,6 +132,9 @@ system("cls");
         total += (arrayint2D[j][0]/100)*arrayint2D[j][1];
     }
     printf("                  TOTAL               %.2f/100\n\n",total);
-    system("pause");
+    int menu;
+    printf("\n\n1 : select an other UP number\n2 : select module\n3 : edit\n4 : delete\n5 : EXIT");
+    printf("\n\nSELECT THE CORRESPONDING NUMBER");
+    scanf("%d", &menu);
     return 0;
 }
