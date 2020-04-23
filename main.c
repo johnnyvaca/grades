@@ -6,8 +6,8 @@
 int menu = 1;
 char studentID[100];
 
-int modules(char patchID[100], char variable[200], char studentID[100], char fileModule[240], char array[240][100],
-            char moduleSelected[100]) {
+int selectModule(char patchID[100], char variable[200], char studentID[100], char fileModule[240], char array[240][100],
+                 char moduleSelected[100]) {
     sprintf(patchID, "..\\grades\\%s", studentID);
     strcpy(variable, "./grades/");
     strcat(variable, studentID);
@@ -30,8 +30,8 @@ int modules(char patchID[100], char variable[200], char studentID[100], char fil
     return num;
 }
 
-int module(char fileModule[240], char studentID[100], char array[240][100], int num, char array2D[240][300],
-           float arrayint2D[128][2]) {
+int readModule(char fileModule[240], char studentID[100], char array[240][100], int num, char array2D[240][300],
+               float arrayint2D[128][2]) {
 
     sprintf(fileModule, "grades\\%s\\%s",
             studentID, array[num]);
@@ -66,12 +66,13 @@ int module(char fileModule[240], char studentID[100], char array[240][100], int 
             }
             ii++;
         }
-        fclose(file);
+
     }
+    fclose(file);
     return ii;
 }
 
-void studentName(char studentID[100], char name[128]) {
+void getStudentName(char studentID[100], char name[128]) {
 
 
     FILE *fileStudentsID;
@@ -112,8 +113,9 @@ void studentName(char studentID[100], char name[128]) {
 void result(char studentID[100], char name[128], int num, char array2D[240][300],
             float arrayint2D[128][2], char array[240][100], int ii) {
     float total = 0;
-    printf("%s - %s\n\n%s\n", name, studentID, array[num]);
-    printf("  Weighting     Grade Item               Grade\n");
+    printf("%s - %s\n\n", name, studentID, array[num]);
+    printf("%s\n\n", array[num]);
+    printf("   Weighting     Grade Item               Grade\n");
 
     for (int j = 0; j < ii; ++j) {
         printf("%d  %.0f/100", j + 1, arrayint2D[j][0]);
@@ -124,7 +126,7 @@ void result(char studentID[100], char name[128], int num, char array2D[240][300]
     printf("                     TOTAL               %.2f/100\n\n", total);
 }
 
-void add(char fileModule[240]) {
+void addRow(char fileModule[240]) {
     char easy[40];
     float weighting;
     float grade;
@@ -138,7 +140,36 @@ void add(char fileModule[240]) {
     FILE *f = NULL;
     f = fopen(fileModule, "a");
     fprintf(f, "\n%.0f %.0f %s ", weighting, grade, easy);
+    fclose(f);
+
     system("pause");
+}
+
+void deleteRow(char fileModule[240]) {
+    int deleteLine;
+    printf("\nSelect the line for delete :   ");
+    scanf("%d", &deleteLine);
+    FILE *file;
+    file = fopen(fileModule, "r");
+    char tempArray[240][240];
+    int kk = 1;
+    char line[128][240];
+    if (file != NULL) {
+
+        while (fgets(line[kk], sizeof line, file) != NULL) {
+            strcpy(tempArray[kk], line[kk]);
+            kk++;
+        }
+    }
+    fclose(file);
+    FILE *f = NULL;
+    f = fopen(fileModule, "w");
+    for (int i = 1; i <= kk; ++i) {
+        if (i != deleteLine) {
+            fprintf(f, "%s", tempArray[i]);
+        }
+    }
+    fclose(f);
 }
 
 int main() {
@@ -157,13 +188,13 @@ int main() {
         printf("ID \n");
         scanf("%s", studentID);
     }
-    num = modules(patchID, variable, studentID, fileModule, array, moduleSelected);
-    ii = module(fileModule, studentID, array, num, array2D, arrayint2D);
-    studentName(studentID, name);
+    num = selectModule(patchID, variable, studentID, fileModule, array, moduleSelected);
+    ii = readModule(fileModule, studentID, array, num, array2D, arrayint2D);
+    getStudentName(studentID, name);
     system("cls");
     result(studentID, name, num, array2D,
            arrayint2D, array, ii);
-    printf("\n\n1 : select an other UP number\n2 : select module\n3 : change\n4 : delete\n5 : add\n6 : EXIT");
+    printf("\n\n1 select an other UP number\n2 select an other module\n3 modify a grade\n4 delete a grade\n5 add a grade\n6 EXIT");
     printf("\n\nSELECT THE CORRESPONDING NUMBER");
     scanf("%d", &menu);
     switch (menu) {
@@ -178,10 +209,12 @@ int main() {
         case 3:
             break;
         case 4:
+            deleteRow(fileModule);
+            system("pause");
             break;
         case 5:
             system("cls");
-            add(fileModule);
+            addRow(fileModule);
             break;
         case 6:
             system("exit");
@@ -190,4 +223,42 @@ int main() {
             printf("vide");
     }
     return 0;
+}
+
+void deleteRow2(char fileModule[240]) {
+    FILE *fileptr1;
+    FILE *fileptr2;
+    int temp2 = 0;
+    char ch;
+    int delete_line, temp = 1;
+    fileptr1 = fopen(fileModule, "r");
+    ch = getc(fileptr1);
+    while (ch != EOF) {
+        ch = getc(fileptr1);
+    }
+    rewind(fileptr1);
+    printf(" \n Enter line number of the line to be deleted:");
+    scanf("%d", &delete_line);
+    //open new file in write mode
+    fileptr2 = fopen("replica.txt", "a");
+    ch = getc(fileptr1);
+    while (ch != EOF) {
+        ch = getc(fileptr1);
+
+        if (ch == '\n')
+            temp++;
+        //except the line to be deleted
+        if (temp != delete_line) {
+            //copy all lines in file replica.c
+            putc(ch, fileptr2);
+        }
+        temp2++;
+    }
+    fclose(fileptr1);
+    fclose(fileptr2);
+    remove(fileModule);
+    //rename the file replica.c to original name
+    // rename("replica.txt", fileModule);
+
+
 }

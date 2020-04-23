@@ -1,8 +1,0 @@
-10 61 easy2 
-14 73 exam 
-9 73 exam2 
-15 61 easy3 
-10 73 easy1 
-7 61 easy2 
-12 73 exam 
-2 99 easy234 
