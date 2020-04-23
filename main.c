@@ -171,7 +171,45 @@ void deleteRow(char fileModule[240]) {
     }
     fclose(f);
 }
+void modifyRow(char fileModule[240]){
+    int deleteLine;
+    char easy[40];
+    float weighting;
+    float grade;
 
+    printf("\nSelect the line for modify :   ");
+    scanf("%d", &deleteLine);
+    printf("\nWrite Easy: \n");
+    scanf("%s", easy);
+    printf("\nWrite Weighting: \n");
+    scanf("%f", &weighting);
+    printf("\nWrite Grade: \n");
+    scanf("%f", &grade);
+
+    FILE *file;
+    file = fopen(fileModule, "r");
+    char tempArray[240][240];
+    int kk = 1;
+    char line[128][240];
+    if (file != NULL) {
+
+        while (fgets(line[kk], sizeof line, file) != NULL) {
+            strcpy(tempArray[kk], line[kk]);
+            kk++;
+        }
+    }
+    fclose(file);
+    FILE *f = NULL;
+    f = fopen(fileModule, "w");
+    for (int i = 1; i <= kk; ++i) {
+        if (i != deleteLine) {
+            fprintf(f, "%s", tempArray[i]);
+        }else{
+            fprintf(f, "%.0f %.0f %s ", weighting, grade, easy);
+        }
+    }
+    fclose(f);
+}
 int main() {
     system("cls");
     char name[128];
@@ -208,6 +246,11 @@ int main() {
             main();
             break;
         case 3:
+            system("cls");
+            result(studentID, name, num, array2D,
+                   arrayint2D, array, ii);
+            modifyRow(fileModule);
+            system("pause");
             break;
         case 4:
             system("cls");
