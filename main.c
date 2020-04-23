@@ -173,6 +173,7 @@ void deleteRow(char fileModule[240]) {
 }
 
 int main() {
+    system("cls");
     char name[128];
     int num;
     int ii;
@@ -209,6 +210,9 @@ int main() {
         case 3:
             break;
         case 4:
+            system("cls");
+            result(studentID, name, num, array2D,
+                   arrayint2D, array, ii);
             deleteRow(fileModule);
             system("pause");
             break;
