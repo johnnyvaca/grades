@@ -5,7 +5,12 @@
 
 int menu = 1;
 char studentID[100];
-
+char name[128];
+char array[240][100];
+char array2D[240][300];
+float arrayint2D[128][2];
+int num;
+int ii = 0;
 void viderBuffer() {
     int c = 0;
     while (c != '\n' && c != EOF) {
@@ -13,11 +18,11 @@ void viderBuffer() {
     }
 }
 
-int selectModule(char patchID[100], char variable[200], char fileModule[240], char array[240][100],
+int selectModule(char patchID[100], char variable[200], char fileModule[240],
                  char moduleSelected[100]) {
 
     system("cls");
-    int num;
+
     int test = 0;
     int test2 = 1;
     char array2[240];
@@ -34,7 +39,7 @@ int selectModule(char patchID[100], char variable[200], char fileModule[240], ch
         }
     }
     if (test2 == 0) {
-        selectModule(patchID, variable, fileModule, array,
+        selectModule(patchID, variable, fileModule,
                      moduleSelected);
     } else {
 
@@ -66,18 +71,23 @@ int selectModule(char patchID[100], char variable[200], char fileModule[240], ch
                 }
                 i++;
             }
+            closedir (patch);
+            if (menu == 1 || menu == 2) {
+                printf("\n\nSELECT A MODULE : ");
 
-            printf("\n\nSELECT A MODULE : ");
-           
-            scanf("%s", moduleSelected);
-            num = atoi(moduleSelected);
+                scanf("%s", moduleSelected);
 
-            return num;
+            }
+                num = atoi(moduleSelected);
+                return num;
+
+
+
 
 
         } else {
 
-            selectModule(patchID, variable, fileModule, array,
+            selectModule(patchID, variable, fileModule,
                          moduleSelected);
         }
     }
@@ -85,15 +95,14 @@ int selectModule(char patchID[100], char variable[200], char fileModule[240], ch
 
 }
 
-int readModule(char fileModule[240], char array[240][100], int num, char array2D[240][300],
-               float arrayint2D[128][2]) {
+int readModule(char fileModule[240]) {
 
     sprintf(fileModule, "grades\\%s\\%s",
             studentID, array[num]);
     FILE *file;
     file = fopen(fileModule, "r");
 
-    int ii = 0;
+
     char line[128][240];
     if (file != NULL) {
 
@@ -127,9 +136,7 @@ int readModule(char fileModule[240], char array[240][100], int num, char array2D
     return ii;
 }
 
-void getStudentName(char studentID[123], char name[128]) {
-
-
+void getStudentName() {
     FILE *fileStudentsID;
     fileStudentsID = fopen("grades\\studentsID.txt", "r");
 
@@ -165,8 +172,7 @@ void getStudentName(char studentID[123], char name[128]) {
     }
 }
 
-void result(char name[128], int num, char array2D[240][300],
-            float arrayint2D[128][2], char array[240][100], int ii) {
+void result() {
     float total = 0;
     printf("%s - %s\n\n", name, studentID, array[num]);
     printf("%s\n\n", array[num]);
@@ -261,7 +267,7 @@ void modifyRow(char fileModule[240]) {
         if (i != deleteLine) {
             fprintf(f, "%s", tempArray[i]);
         } else {
-            fprintf(f, "%.0f %.0f %s ", weighting, grade, easy);
+            fprintf(f, "%.0f %.0f %s \n", weighting, grade, easy);
         }
     }
     fclose(f);
@@ -269,26 +275,22 @@ void modifyRow(char fileModule[240]) {
 
 int main() {
     system("cls");
-    char name[128];
-    int num;
-    int ii;
+
+
     char patchID[100];
     char variable[200];
     char fileModule[240];
-    char array[240][100];
+
 
     char moduleSelected[100];
-    char array2D[240][300];
-    float arrayint2D[128][2];
 
 
-    num = selectModule(patchID, variable, fileModule, array, moduleSelected);
-    printf("");
-    ii = readModule(fileModule, array, num, array2D, arrayint2D);
-    getStudentName(studentID, name);
+    num = selectModule(patchID, variable, fileModule, moduleSelected);
+
+    ii = readModule(fileModule);
+    getStudentName(studentID);
     system("cls");
-    result(name, num, array2D,
-           arrayint2D, array, ii);
+    result();
     printf("\n\n1 select an other UP number\n2 select an other module\n3 modify a grade\n4 delete a grade\n5 add a grade\n6 EXIT");
     printf("\n\nSELECT THE CORRESPONDING NUMBER");
     scanf("%d", &menu);
@@ -301,27 +303,29 @@ int main() {
             break;
         case 3:
             system("cls");
-            result(name, num, array2D,
-                   arrayint2D, array, ii);
+            result();
             modifyRow(fileModule);
-            system("pause");
+            system("cls");
+            main();
             break;
         case 4:
             system("cls");
-            result(name, num, array2D,
-                   arrayint2D, array, ii);
+            result();
             deleteRow(fileModule);
-            system("pause");
+            system("cls");
+            main();
             break;
         case 5:
             system("cls");
+            result();
             addRow(fileModule);
             break;
         case 6:
             system("exit");
             break;
         default:
-            printf("vide");
+            system("cls");
+            main();
     }
     return 0;
 }
