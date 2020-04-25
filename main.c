@@ -11,16 +11,14 @@ char array2D[240][300];
 float arrayint2D[128][2];
 int num;
 int ii = 0;
-void viderBuffer() {
-    int c = 0;
-    while (c != '\n' && c != EOF) {
-        c = getchar();
-    }
-}
+char patchID[100];
+char variable[200];
+char fileModule[240];
+char moduleSelected[100];
+char fileModule[240];
 
-int selectModule(char patchID[100], char variable[200], char fileModule[240],
-                 char moduleSelected[100]) {
-
+int selectModule() {
+    ii = 0;
     system("cls");
 
     int test = 0;
@@ -71,18 +69,18 @@ int selectModule(char patchID[100], char variable[200], char fileModule[240],
                 }
                 i++;
             }
-            closedir (patch);
+            closedir(patch);
             if (menu == 1 || menu == 2) {
                 printf("\n\nSELECT A MODULE : ");
-
                 scanf("%s", moduleSelected);
-
             }
-                num = atoi(moduleSelected);
+
+            num = atoi(moduleSelected);
+            if (num < 1 || num > i - 3) {
+                menu = 2;
+                selectModule();
                 return num;
-
-
-
+            }
 
 
         } else {
@@ -95,7 +93,7 @@ int selectModule(char patchID[100], char variable[200], char fileModule[240],
 
 }
 
-int readModule(char fileModule[240]) {
+int readModule() {
 
     sprintf(fileModule, "grades\\%s\\%s",
             studentID, array[num]);
@@ -187,7 +185,7 @@ void result() {
     printf("                     TOTAL               %.2f/100\n\n", total);
 }
 
-void addRow(char fileModule[240]) {
+void addRow() {
     char easy[40];
     float weighting;
     float grade;
@@ -206,7 +204,7 @@ void addRow(char fileModule[240]) {
     system("pause");
 }
 
-void deleteRow(char fileModule[240]) {
+void deleteRow() {
     int deleteLine;
     printf("\nSelect the line for delete :   ");
     scanf("%d", &deleteLine);
@@ -233,7 +231,14 @@ void deleteRow(char fileModule[240]) {
     fclose(f);
 }
 
-void modifyRow(char fileModule[240]) {
+void viderBuffer() {
+    int c = 0;
+    while (c != '\n' && c != EOF) {
+        c = getchar();
+    }
+}
+
+void modifyRow() {
     int deleteLine;
     char easy[40];
     float weighting;
@@ -283,7 +288,7 @@ int main() {
 
 
     char moduleSelected[100];
-
+    int test3 = 1;
 
     num = selectModule(patchID, variable, fileModule, moduleSelected);
 
@@ -293,39 +298,52 @@ int main() {
     result();
     printf("\n\n1 select an other UP number\n2 select an other module\n3 modify a grade\n4 delete a grade\n5 add a grade\n6 EXIT");
     printf("\n\nSELECT THE CORRESPONDING NUMBER");
-    scanf("%d", &menu);
+    char menuString[1000];
+    scanf("%s", menuString);
+    for (int j = 0; j < strlen(menuString); ++j) {
+        if (studentID[j] < 48 || studentID[j] > 57) {
+            test3 = 0;
+        }
+    }
+    if (test3 == 1) {
+        menu = atoi(menuString);
+    } else {
+        menu = 7;
+        system("cls");
+        main();
+    }
+
+
     switch (menu) {
         case 1:
 
         case 2:
-            system("cls");
             main();
             break;
         case 3:
             system("cls");
             result();
-            modifyRow(fileModule);
-            system("cls");
+            modifyRow();
+
             main();
             break;
         case 4:
             system("cls");
             result();
-            deleteRow(fileModule);
-            system("cls");
+            deleteRow();
+
             main();
             break;
         case 5:
-            system("cls");
             result();
-            addRow(fileModule);
+            addRow();
             break;
         case 6:
             system("exit");
             break;
         default:
-            system("cls");
             main();
     }
+
     return 0;
 }

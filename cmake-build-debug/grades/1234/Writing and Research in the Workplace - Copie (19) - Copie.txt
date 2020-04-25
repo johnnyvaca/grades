@@ -1,8 +1,12 @@
 10 61 easy1 
+14 73 easy2 
 9 73 easy3 
+15 61 easy4 
 7 61 easy6 
+12 73 easy7 
 13 73 easy8 
 234 100 easy9 
+10 61 easy10 
 10 61 easy11 
 14 73 easy12 
 9 73 easy13 
@@ -12,6 +16,5 @@
 12 73 easy17 
 13 73 easy18 
 234 100 easy19 
-21 12 easy21 
-89 98 easy22 
-23 23 easy23 
+10 61 easy20 
+21 21 easy21 
