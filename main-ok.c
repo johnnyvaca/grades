@@ -17,20 +17,21 @@ char fileModule[240];
 char moduleSelected[100];
 char fileModule[240];
 char message[200];
-int testDelete = 2;
-int indexDelete = 1;
 
 int selectModule() {
     ii = 0;
     system("cls");
+
     int test = 0;
     int test2 = 1;
     char array2[240];
+
     if (menu == 1) {
-        printf("Select an UP number \n");
+        printf("ID \n");
         scanf("%s", studentID);
     }
     int student = atoi(studentID);
+
     for (int j = 0; j < strlen(studentID); ++j) {
         if (studentID[j] < 48 || studentID[j] > 57) {
             test2 = 0;
@@ -40,6 +41,7 @@ int selectModule() {
         selectModule(patchID, variable, fileModule,
                      moduleSelected);
     } else {
+
         struct dirent *lecture2;
         DIR *patch2;
         patch2 = opendir("./grades/");
@@ -50,6 +52,8 @@ int selectModule() {
                 test = 1;
             }
         }
+
+
         if (test == 1) {
             sprintf(patchID, "..\\grades\\%s", studentID);
             strcpy(variable, "./grades/");
@@ -58,7 +62,7 @@ int selectModule() {
             DIR *patch;
             patch = opendir(variable);
             int i = 1;
-            system("cls");
+
             while ((lecture = readdir(patch))) {
                 if (!(i - 2 == -1 || i - 2 == 0)) {
                     printf("%d %s\n", i - 2, lecture->d_name);
@@ -89,7 +93,6 @@ int selectModule() {
 
 
 }
-
 int readModule() {
 
     sprintf(fileModule, "grades\\%s\\%s",
@@ -130,7 +133,6 @@ int readModule() {
     fclose(file);
     return ii;
 }
-
 void getStudentName() {
     FILE *fileStudentsID;
     fileStudentsID = fopen("grades\\studentsID.txt", "r");
@@ -166,9 +168,8 @@ void getStudentName() {
         }
     }
 }
-
 void displayMessages() {
-    strcpy(message, "");
+
     switch (menu) {
         case 1:
 
@@ -180,14 +181,7 @@ void displayMessages() {
 
             break;
         case 4:
-            if (testDelete == 0) {
-                strcpy(message, "\nerror!!! select a number by 1 to ");
-                sprintf(message, "%s%d\n", message, indexDelete);
-
-            }
-            if (testDelete == 1) {
-                strcpy(message, "\nsuccessful deletion\n");
-            }
+                strcpy(message, "");
             break;
         case 5:
 
@@ -202,10 +196,10 @@ void displayMessages() {
     printf("%s", message);
 
 }
-
 void result() {
     float total = 0;
-    printf("%s - %s  %d\n\n", name, studentID, indexDelete);
+    system("cls");
+    printf("%s - %s\n\n", name, studentID, array[num]);
     printf("%s\n\n", array[num]);
     printf("   Weighting     Grade Item               Grade\n");
 
@@ -218,7 +212,6 @@ void result() {
     printf("                     TOTAL               %.2f/100\n\n", total);
     displayMessages();
 }
-
 void addRow() {
     char easy[40];
     float weighting;
@@ -235,68 +228,40 @@ void addRow() {
     fprintf(f, "\n%.0f-%.0f-%s-", weighting, grade, easy);
     fclose(f);
 }
-
 void deleteRow() {
-    indexDelete = 1;
-    testDelete = 2;
-    FILE *file1;
-    file1 = fopen(fileModule, "r");
-    char line1[128][240];
-    if (file1 != NULL) {
-        while (fgets(line1[indexDelete], sizeof line1, file1) != NULL) {
-            indexDelete++;
-        }
-    }
-
-    fclose(file1);
     int deleteLine;
     char deleteLineString[100];
-    testDelete = 1;
-    printf("\nSelect the line for delete : ");
+    printf("\nSelect the line for delete");
     scanf("%s", deleteLineString);
-    for (int j = 0; j < strlen(deleteLineString); ++j) {
-        if (deleteLineString[j] < 48 || deleteLineString[j] > 57) {
-            testDelete = 0;
-            break;
-        } else {
-            testDelete = 1;
-        }
-    }
 
-    if (testDelete != 0) {
         FILE *file;
         file = fopen(fileModule, "r");
         char tempArray[240][240];
+        int kk = 1;
         char line[128][240];
-        int index = 1;
         if (file != NULL) {
-            while (fgets(line[index], sizeof line, file) != NULL) {
-                strcpy(tempArray[index], line[index]);
-                index++;
+
+            while (fgets(line[kk], sizeof line, file) != NULL) {
+                strcpy(tempArray[kk], line[kk]);
+                kk++;
             }
         }
         fclose(file);
+
         deleteLine = atoi(deleteLineString);
-        if (deleteLine < 1 || deleteLine >= indexDelete) {
-            testDelete = 0;
-        } else {
-            testDelete = 1;
-        }
-        if (testDelete != 0) {
-            FILE *f = NULL;
-            f = fopen(fileModule, "w");
-            for (int i = 1; i <= indexDelete; ++i) {
-                if (i != deleteLine) {
-                    fprintf(f, "%s", tempArray[i]);
-                }
-            }
-            fclose(f);
-        }
 
-    }
-    indexDelete--;
+
+           FILE *f = NULL;
+           f = fopen(fileModule, "w");
+           for (int i = 1; i <= kk; ++i) {
+               if (i != deleteLine) {
+                   fprintf(f, "%s", tempArray[i]);
+               }
+           }
+           fclose(f);
+           
+
 }
-
 void modifyRow() {
     int deleteLine;
     char easy[40];
@@ -333,38 +298,13 @@ void modifyRow() {
     }
     fclose(f);
 }
-
 int main() {
     system("cls");
     int test = 1;
     num = selectModule();
     ii = readModule();
     getStudentName();
-    system("cls");
     result();
-    switch (menu) {
-        case 3:
-            system("cls");
-            result();
-            modifyRow();
-            main();
-            break;
-        case 4:
-            if (testDelete == 0) {
-                system("cls");
-                result();
-                deleteRow();
-                main();
-            }
-            break;
-        case 5:
-            system("cls");
-            result();
-            addRow();
-            main();
-            break;
-        default:;
-    }
     printf("\n\n1 select an other UP number\n2 select an other module\n3 modify a grade\n4 delete a grade\n5 add a grade\n6 EXIT");
     printf("\n\nSELECT THE CORRESPONDING NUMBER");
     char menuString[1000];
@@ -383,7 +323,6 @@ int main() {
     }
     switch (menu) {
         case 1:
-
         case 2:
             main();
             break;
@@ -410,7 +349,6 @@ int main() {
             break;
         default:
             main();
-
     }
     return 0;
 }
