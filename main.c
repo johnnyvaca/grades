@@ -16,6 +16,7 @@ char variable[200];
 char fileModule[240];
 char moduleSelected[100];
 char fileModule[240];
+char message[200];
 
 int selectModule() {
     ii = 0;
@@ -92,7 +93,6 @@ int selectModule() {
 
 
 }
-
 int readModule() {
 
     sprintf(fileModule, "grades\\%s\\%s",
@@ -107,7 +107,7 @@ int readModule() {
         while (fgets(line[ii], sizeof line, file) != NULL) {
 
             int iii = 0;
-            char separator[] = " ";
+            char separator[] = "-";
             char *sentence = strtok(line[ii], separator);
             while (sentence != NULL) {
 
@@ -133,7 +133,6 @@ int readModule() {
     fclose(file);
     return ii;
 }
-
 void getStudentName() {
     FILE *fileStudentsID;
     fileStudentsID = fopen("grades\\studentsID.txt", "r");
@@ -169,9 +168,37 @@ void getStudentName() {
         }
     }
 }
+void displayMessages() {
 
+    switch (menu) {
+        case 1:
+
+
+        case 2:
+
+            break;
+        case 3:
+
+            break;
+        case 4:
+                strcpy(message, "");
+            break;
+        case 5:
+
+            break;
+        case 6:
+
+            break;
+        default:
+            strcpy(message, "\nerror!!! select a number by 1 to 6\n");
+
+    }
+    printf("%s", message);
+
+}
 void result() {
     float total = 0;
+    system("cls");
     printf("%s - %s\n\n", name, studentID, array[num]);
     printf("%s\n\n", array[num]);
     printf("   Weighting     Grade Item               Grade\n");
@@ -183,8 +210,8 @@ void result() {
         total += (arrayint2D[j][0] / 100) * arrayint2D[j][1];
     }
     printf("                     TOTAL               %.2f/100\n\n", total);
+    displayMessages();
 }
-
 void addRow() {
     char easy[40];
     float weighting;
@@ -198,53 +225,49 @@ void addRow() {
 
     FILE *f = NULL;
     f = fopen(fileModule, "a");
-    fprintf(f, "\n%.0f %.0f %s ", weighting, grade, easy);
+    fprintf(f, "\n%.0f-%.0f-%s-", weighting, grade, easy);
     fclose(f);
-
-    system("pause");
 }
-
 void deleteRow() {
     int deleteLine;
-    printf("\nSelect the line for delete :   ");
-    scanf("%d", &deleteLine);
-    FILE *file;
-    file = fopen(fileModule, "r");
-    char tempArray[240][240];
-    int kk = 1;
-    char line[128][240];
-    if (file != NULL) {
+    char deleteLineString[100];
+    printf("\nSelect the line for delete");
+    scanf("%s", deleteLineString);
 
-        while (fgets(line[kk], sizeof line, file) != NULL) {
-            strcpy(tempArray[kk], line[kk]);
-            kk++;
+        FILE *file;
+        file = fopen(fileModule, "r");
+        char tempArray[240][240];
+        int kk = 1;
+        char line[128][240];
+        if (file != NULL) {
+
+            while (fgets(line[kk], sizeof line, file) != NULL) {
+                strcpy(tempArray[kk], line[kk]);
+                kk++;
+            }
         }
-    }
-    fclose(file);
-    FILE *f = NULL;
-    f = fopen(fileModule, "w");
-    for (int i = 1; i <= kk; ++i) {
-        if (i != deleteLine) {
-            fprintf(f, "%s", tempArray[i]);
-        }
-    }
-    fclose(f);
-}
+        fclose(file);
 
-void viderBuffer() {
-    int c = 0;
-    while (c != '\n' && c != EOF) {
-        c = getchar();
-    }
-}
+        deleteLine = atoi(deleteLineString);
 
+
+           FILE *f = NULL;
+           f = fopen(fileModule, "w");
+           for (int i = 1; i <= kk; ++i) {
+               if (i != deleteLine) {
+                   fprintf(f, "%s", tempArray[i]);
+               }
+           }
+           fclose(f);
+           
+
+}
 void modifyRow() {
     int deleteLine;
     char easy[40];
     float weighting;
     float grade;
-
-    printf("\nSelect the line for modify :   ");
+    printf("\nSelect the line for modify :\n");
     scanf("%d", &deleteLine);
     printf("\nWrite Easy: \n");
     scanf("%s", easy);
@@ -252,14 +275,12 @@ void modifyRow() {
     scanf("%f", &weighting);
     printf("\nWrite Grade: \n");
     scanf("%f", &grade);
-
     FILE *file;
     file = fopen(fileModule, "r");
     char tempArray[240][240];
     int kk = 1;
     char line[128][240];
     if (file != NULL) {
-
         while (fgets(line[kk], sizeof line, file) != NULL) {
             strcpy(tempArray[kk], line[kk]);
             kk++;
@@ -272,29 +293,17 @@ void modifyRow() {
         if (i != deleteLine) {
             fprintf(f, "%s", tempArray[i]);
         } else {
-            fprintf(f, "%.0f %.0f %s \n", weighting, grade, easy);
+            fprintf(f, "%.0f-%.0f-%s-\n", weighting, grade, easy);
         }
     }
     fclose(f);
 }
-
 int main() {
     system("cls");
-
-
-    char patchID[100];
-    char variable[200];
-    char fileModule[240];
-
-
-    char moduleSelected[100];
-    int test3 = 1;
-
-    num = selectModule(patchID, variable, fileModule, moduleSelected);
-
-    ii = readModule(fileModule);
-    getStudentName(studentID);
-    system("cls");
+    int test = 1;
+    num = selectModule();
+    ii = readModule();
+    getStudentName();
     result();
     printf("\n\n1 select an other UP number\n2 select an other module\n3 modify a grade\n4 delete a grade\n5 add a grade\n6 EXIT");
     printf("\n\nSELECT THE CORRESPONDING NUMBER");
@@ -302,21 +311,18 @@ int main() {
     scanf("%s", menuString);
     for (int j = 0; j < strlen(menuString); ++j) {
         if (studentID[j] < 48 || studentID[j] > 57) {
-            test3 = 0;
+            test = 0;
         }
     }
-    if (test3 == 1) {
+    if (test == 1) {
         menu = atoi(menuString);
     } else {
-        menu = 7;
+        menu = -1;
         system("cls");
         main();
     }
-
-
     switch (menu) {
         case 1:
-
         case 2:
             main();
             break;
@@ -324,19 +330,19 @@ int main() {
             system("cls");
             result();
             modifyRow();
-
             main();
             break;
         case 4:
             system("cls");
             result();
             deleteRow();
-
             main();
             break;
         case 5:
+            system("cls");
             result();
             addRow();
+            main();
             break;
         case 6:
             system("exit");
@@ -344,6 +350,5 @@ int main() {
         default:
             main();
     }
-
     return 0;
 }
