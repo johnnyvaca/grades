@@ -45,7 +45,7 @@ set(CMAKE_C_IGNORE_EXTENSIONS h;H;o;O;obj;OBJ;def;DEF;rc;RC)
 set(CMAKE_C_LINKER_PREFERENCE 10)
 
 # Save compiler ABI information.
-set(CMAKE_C_SIZEOF_DATA_PTR "")
+set(CMAKE_C_SIZEOF_DATA_PTR "4")
 set(CMAKE_C_COMPILER_ABI "")
 set(CMAKE_C_LIBRARY_ARCHITECTURE "")
 
@@ -70,7 +70,7 @@ endif()
 
 
 
-set(CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "")
-set(CMAKE_C_IMPLICIT_LINK_LIBRARIES "")
-set(CMAKE_C_IMPLICIT_LINK_DIRECTORIES "")
+set(CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "C:/MinGW/lib/gcc/mingw32/9.2.0/include;C:/MinGW/include;C:/MinGW/lib/gcc/mingw32/9.2.0/include-fixed")
+set(CMAKE_C_IMPLICIT_LINK_LIBRARIES "mingw32;mingwex;gcc;moldname;advapi32;shell32;user32;kernel32;mingw32;mingwex;gcc;moldname")
+set(CMAKE_C_IMPLICIT_LINK_DIRECTORIES "C:/MinGW/lib/gcc/mingw32/9.2.0;C:/MinGW/lib/gcc;C:/MinGW/mingw32/lib;C:/MinGW/lib")
 set(CMAKE_C_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES "")

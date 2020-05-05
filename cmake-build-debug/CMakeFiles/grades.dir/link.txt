@@ -1,3 +1,3 @@
-"C:\Program Files\JetBrains\CLion 2020.1\bin\cmake\win\bin\cmake.exe" -E remove -f CMakeFiles\grades.dir/objects.a
+"C:\Program Files\JetBrains\CLion 2020.1.1\bin\cmake\win\bin\cmake.exe" -E remove -f CMakeFiles\grades.dir/objects.a
 C:\MinGW\bin\ar.exe cr CMakeFiles\grades.dir/objects.a @CMakeFiles\grades.dir\objects1.rsp
 C:\MinGW\bin\gcc.exe -g   -Wl,--whole-archive CMakeFiles\grades.dir/objects.a -Wl,--no-whole-archive  -o grades.exe -Wl,--out-implib,libgrades.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\grades.dir\linklibs.rsp

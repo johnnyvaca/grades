@@ -347,21 +347,20 @@ int main() {
             system("cls");
             result();
             modifyRow();
-            main();
-            break;
+         return main();
         case 4:
             if (testDelete == 0) {
                 system("cls");
                 result();
                 deleteRow();
-                main();
+               return main();
             }
             break;
         case 5:
             system("cls");
             result();
             addRow();
-            main();
+           return main();
             break;
         default:;
     }
