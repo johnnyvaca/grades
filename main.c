@@ -1,3 +1,10 @@
+/*
+ * title : grades
+ * description : it’s an app that allows us to manage students' grades and annual averages.
+ * Date : 06-05-2020
+ * Author : Dinis Esteves
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,7 +13,7 @@
 int menu = 1;
 char studentID[100];
 char name[128];
-char array[240][100];
+char moduleName[240][100];
 char array2D[240][300];
 float arrayint2D[128][2];
 int num;
@@ -21,12 +28,13 @@ int testDelete = 2;
 int indexDelete = 1;
 int testAdd = 2;
 int testAddGrade = 2;
-int indexAdd = 1;
 char easy[40];
 float weighting;
 float grade;
 char weightingString[100];
 char gradeString[100];
+
+
 int selectModule() {
     ii = 0;
     system("cls");
@@ -69,7 +77,7 @@ int selectModule() {
             while ((lecture = readdir(patch))) {
                 if (!(i - 2 == -1 || i - 2 == 0)) {
                     printf("%d %s\n", i - 2, lecture->d_name);
-                    strcpy(array[i - 2], lecture->d_name);
+                    strcpy(moduleName[i - 2], lecture->d_name);
                 }
                 i++;
             }
@@ -100,7 +108,7 @@ int selectModule() {
 int readModule() {
 
     sprintf(fileModule, "grades\\%s\\%s",
-            studentID, array[num]);
+            studentID, moduleName[num]);
     FILE *file;
     file = fopen(fileModule, "r");
 
@@ -218,8 +226,8 @@ void displayMessages() {
 
 void result() {
     float total = 0;
-    printf("%s - %s  %d\n\n", name, studentID, indexDelete);
-    printf("%s\n\n", array[num]);
+    printf("%s - %s\n\n", name, studentID);
+    printf("%s\n\n", moduleName[num]);
     printf("   Weighting     Grade Item               Grade\n");
 
     for (int j = 0; j < ii; ++j) {
