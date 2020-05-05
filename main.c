@@ -19,7 +19,14 @@ char fileModule[240];
 char message[200];
 int testDelete = 2;
 int indexDelete = 1;
-
+int testAdd = 2;
+int testAddGrade = 2;
+int indexAdd = 1;
+char easy[40];
+float weighting;
+float grade;
+char weightingString[100];
+char gradeString[100];
 int selectModule() {
     ii = 0;
     system("cls");
@@ -190,7 +197,13 @@ void displayMessages() {
             }
             break;
         case 5:
+            if (testAdd == 0 || testAddGrade  == 0) {
+                strcpy(message, "\nerror!!! select a number by 1 to 100");
 
+            }
+            if (testAdd == 1 || testAddGrade  == 1) {
+                strcpy(message, "\nsuccessful add\n");
+            }
             break;
         case 6:
 
@@ -220,20 +233,57 @@ void result() {
 }
 
 void addRow() {
-    char easy[40];
-    float weighting;
-    float grade;
+if( testAdd == 2){
     printf("\nWrite Easy: \n");
     scanf("%s", easy);
-    printf("\nWrite Weighting: \n");
-    scanf("%f", &weighting);
-    printf("\nWrite Grade: \n");
-    scanf("%f", &grade);
+}else{
+    printf("\neasy :    %s",easy);
+}
+    testAdd = 2;
+    if( testAddGrade == 2){
+        printf("\nWrite Weighting: \n");
+        scanf("%s", &weightingString);
+    }else{
+        printf("\nWeighting :    %s",weightingString);
+    }
 
-    FILE *f = NULL;
-    f = fopen(fileModule, "a");
-    fprintf(f, "\n%.0f-%.0f-%s-", weighting, grade, easy);
-    fclose(f);
+    testAddGrade = 2;
+    for (int j = 0; j < strlen(weightingString); ++j) {
+        if (weightingString[j] < 48 || weightingString[j] > 57) {
+            testAdd = 0;
+            break;
+        } else {
+            testAdd = 1;
+        }
+    }
+    if (testAdd != 0) {
+        weighting = atof(weightingString);
+
+        printf("\nWrite Grade: \n");
+        scanf("%s", &gradeString);
+        for (int j = 0; j < strlen(gradeString); ++j) {
+            if (gradeString[j] < 48 || gradeString[j] > 57) {
+                testAddGrade = 0;
+                testAdd = testAddGrade;
+                break;
+            } else {
+                testAddGrade = 1;
+                testAdd = testAddGrade;
+            }
+        }
+    }
+
+        if (testAddGrade !=0 && testAdd == 1) {
+            grade = atof(gradeString);
+            FILE *f = NULL;
+            f = fopen(fileModule, "a");
+            fprintf(f, "\n%.0f-%.0f-%s-", weighting, grade, easy);
+            fclose(f);
+
+            testAdd = 2;
+            testAddGrade = 2;
+        }
+
 }
 
 void deleteRow() {
@@ -295,6 +345,7 @@ void deleteRow() {
 
     }
     indexDelete--;
+    testDelete = 2;
 }
 
 void modifyRow() {
@@ -357,10 +408,12 @@ int main() {
             }
             break;
         case 5:
-            system("cls");
-            result();
-            addRow();
-           return main();
+            if (testAdd == 0 || testAddGrade == 0) {
+                system("cls");
+                result();
+                addRow();
+                return main();
+            }
             break;
         default:;
     }
