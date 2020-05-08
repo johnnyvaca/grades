@@ -11,7 +11,7 @@
 #include <dirent.h>
 
 int menu = 1;
-char studentID[100];
+char studentUP[100];
 char studentName[128];
 char moduleName[240][100];
 char gradeAssessements[240][300];
@@ -33,6 +33,7 @@ float weighting;
 float grade;
 char weightingString[100];
 char gradeString[100];
+
 // this function displays the messages after the operation
 // 0 = error || 1 = successfull
 void displayMessages() {
@@ -71,6 +72,7 @@ void displayMessages() {
     printf("%s", message);
 
 }
+
 // this function get the number UP and the module
 int selectUpModule() {
     numberLine = 0;
@@ -81,11 +83,11 @@ int selectUpModule() {
     if (menu == 1) {
         printf("Select an UP number \n");
         displayMessages();   // display message
-        scanf("%s", studentID);
+        scanf("%s", studentUP);
     }
-    int student = atoi(studentID); // convert string to int
-    for (int j = 0; j < strlen(studentID); ++j) { // between 0 and the string selected
-        if (studentID[j] < 48 || studentID[j] > 57) { // if the string contain numbers between 0 to 9 in the ASCII table
+    int student = atoi(studentUP); // convert string to int
+    for (int j = 0; j < strlen(studentUP); ++j) { // between 0 and the string selected
+        if (studentUP[j] < 48 || studentUP[j] > 57) { // if the string contain numbers between 0 to 9 in the ASCII table
             testUpNumber = 0;
         }
     }
@@ -106,16 +108,17 @@ int selectUpModule() {
         }
 
         if (testModule == 1) {
-            sprintf(patchSelected, "..\\grades\\%s", studentID); // GET PATCH UNTIL FILE SELECTED
+            sprintf(patchSelected, "..\\grades\\%s", studentUP); // GET PATCH UNTIL FILE SELECTED
             strcpy(patch, "./grades/");
-            strcat(patch, studentID);
+            strcat(patch, studentUP);
             struct dirent *lecture;
             DIR *fileValue; // open a Directory constance
             fileValue = opendir(patch);
             int indexModules = 1;
             system("cls");
             while ((lecture = readdir(fileValue))) {
-                if (!(indexModules - 2 == -1 || indexModules - 2 == 0)) { // taking back folder's name without "." or ".."
+                if (!(indexModules - 2 == -1 ||
+                      indexModules - 2 == 0)) { // taking back folder's name without "." or ".."
                     printf("%d %s\n", indexModules - 2, lecture->d_name);
                     strcpy(moduleName[indexModules - 2], lecture->d_name); // save module's name
                 }
@@ -129,7 +132,8 @@ int selectUpModule() {
 
             moduleSelected_int = atoi(moduleSelected);
 
-            if (moduleSelected_int < 1 || moduleSelected_int > indexModules - 3) {  //IF THE MODULE DO NOT EXIST, RETURN TO THE SAME FUNCTION
+            if (moduleSelected_int < 1 ||
+                moduleSelected_int > indexModules - 3) {  //IF THE MODULE DO NOT EXIST, RETURN TO THE SAME FUNCTION
                 menu = 2;
                 selectUpModule();
                 return moduleSelected_int;
@@ -147,7 +151,7 @@ int selectUpModule() {
 int readModule() {
 
     sprintf(fileModule, "grades\\%s\\%s",
-            studentID, moduleName[moduleSelected_int]); // get the patch to the variable fileModule
+            studentUP, moduleName[moduleSelected_int]); // get the patch to the variable fileModule
 
     // OPEN THE MODULE FILE IN READ MODE
     FILE *file;
@@ -159,7 +163,8 @@ int readModule() {
 
             int indexWords = 0;
             char separator[] = "-";
-            char *fileContent = strtok(line[numberLine], separator); // stock all separate words by the separator "-" of the modules file
+            char *fileContent = strtok(line[numberLine],
+                                       separator); // stock all separate words by the separator "-" of the modules file
             while (fileContent != NULL) {
                 if (indexWords == 2) {
                     strcpy(gradeAssessements[numberLine], fileContent); // stock the name of the assessments
@@ -184,45 +189,47 @@ int readModule() {
 }
 
 void getStudentName() {
-    FILE *fileStudentsID;
-    fileStudentsID = fopen("grades\\studentsID.txt", "r");
+
+    // OPEN THE studentsUP.txt  FILE, IN READ MODE
+    FILE *fileStudentUP;
+    fileStudentUP = fopen("grades\\studentsUP.txt", "r");
 
     char arrayStudentName[240][300];
-    int lineID[128];
+    int lineUP[128];
     int jj = 0;
-    char line2[128][240];
-    if (fileStudentsID != NULL) {
-        while (fgets(line2[jj], sizeof line2, fileStudentsID) != NULL) {
+    char line[128][240];
+    if (fileStudentUP != NULL) {
+        while (fgets(line[jj], sizeof line, fileStudentUP) != NULL) { // read the file line by line
             int jjj = 0;
-            char separatorID[] = "-";
-            char *fileContentID = strtok(line2[jj], separatorID);
-            while (fileContentID != NULL) {
+            char separatorUP[] = "-";
+            char *fileContentUP = strtok(line[jj],
+                                         separatorUP); // stock all separate words by the separator "-" of the modules file
+            while (fileContentUP != NULL) {
                 if (jjj == 1) {
-                    strcpy(arrayStudentName[jj], fileContentID);
+                    strcpy(arrayStudentName[jj], fileContentUP); //  stock the student's name
                 } else if (jjj == 0) {
-                    lineID[jj] = atoi(fileContentID);
+                    lineUP[jj] = atoi(fileContentUP); // convert string to int
                 }
-                fileContentID = strtok(NULL, separatorID);
+                fileContentUP = strtok(NULL, separatorUP); // detect the separator
                 jjj++;
             }
             jj++;
         }
-        fclose(fileStudentsID);
+        fclose(fileStudentUP);
     }
 
 
-    int student = atoi(studentID);
+    int student = atoi(studentUP);
     for (int k = 0; k < jj; ++k) {
-        if (lineID[k] == student) {
-            strcpy(studentName, arrayStudentName[k]);
+        if (lineUP[k] == student) {
+            strcpy(studentName, arrayStudentName[k]); // stock the name selected
         }
     }
 }
 
-
-void result() {
-    float total = 0;
-    printf("%s - %s\n\n", studentName, studentID);
+void result() { // display result in a table
+    float average = 0;
+    printf("%s - %s\n\n", studentName, studentUP);
     printf("%s\n\n", moduleName[moduleSelected_int]);
     printf("   Weighting     Grade Item               Grade\n");
 
@@ -230,9 +237,9 @@ void result() {
         printf("%d  %.0f/100", j + 1, valuesAssessements[j][0]);
         printf("            %s              ", gradeAssessements[j]);
         printf("%.2f/100\n", valuesAssessements[j][1]);
-        total += (valuesAssessements[j][0] / 100) * valuesAssessements[j][1];
+        average += (valuesAssessements[j][0] / 100) * valuesAssessements[j][1]; // calculate the average
     }
-    printf("                     TOTAL               %.2f/100\n\n", total);
+    printf("                   AVERAGE               %.2f/100\n\n", average);
     displayMessages();
 }
 
@@ -246,14 +253,14 @@ void addRow() {
     testAdd = 2;
     if (testAddGrade == 2) {
         printf("\nWrite Weighting: \n");
-        scanf("%s", &weightingString);
+        scanf("%s", weightingString);
     } else {
         printf("\nWeighting :    %s", weightingString);
     }
 
     testAddGrade = 2;
     for (int j = 0; j < strlen(weightingString); ++j) {
-        if (weightingString[j] < 48 || weightingString[j] > 57) {
+        if (weightingString[j] < 48 || weightingString[j] > 57) {// if the weighting are not a number
             testAdd = 0;
             break;
         } else {
@@ -264,9 +271,9 @@ void addRow() {
         weighting = atof(weightingString);
 
         printf("\nWrite Grade: \n");
-        scanf("%s", &gradeString);
+        scanf("%s", gradeString);
         for (int j = 0; j < strlen(gradeString); ++j) {
-            if (gradeString[j] < 48 || gradeString[j] > 57) {
+            if (gradeString[j] < 48 || gradeString[j] > 57) { // if the weighting are not a number
                 testAddGrade = 0;
                 testAdd = testAddGrade;
                 break;
@@ -278,75 +285,76 @@ void addRow() {
     }
 
     if (testAddGrade != 0 && testAdd == 1) {
-        grade = atof(gradeString);
+        grade = atof(gradeString); // convert string to float value
+        // OPEN THE MODULE FILE IN WRITE MODE
         FILE *f = NULL;
         f = fopen(fileModule, "a");
-        fprintf(f, "\n%.0f-%.0f-%s-", weighting, grade, assessements);
+        fprintf(f, "\n%.0f-%.0f-%s-", weighting, grade, assessements); // ADD A LINE WITH THE fprintf CONTENT
         fclose(f);
 
-        testAdd = 2;
-        testAddGrade = 2;
+        testAdd = 2;  // RETURN TO INITIAL VALUE
+        testAddGrade = 2; // RETURN TO INITIAL VALUE
     }
 
 }
 
 void deleteRow() {
-    indexDelete = 1;
+    indexDelete = 1; // get number of lines
     testDelete = 2;
+    // OPEN THE MODULE FILE IN READ MODE
     FILE *file1;
     file1 = fopen(fileModule, "r");
     char line1[128][240];
     if (file1 != NULL) {
-        while (fgets(line1[indexDelete], sizeof line1, file1) != NULL) {
+        while (fgets(line1[indexDelete], sizeof line1, file1) != NULL) { // read the file line by line
             indexDelete++;
         }
     }
-
-    fclose(file1);
+    fclose(file1); // close file1
     int deleteLine;
     char deleteLineString[100];
     testDelete = 1;
     printf("\nSelect the line for delete : ");
     scanf("%s", deleteLineString);
     for (int j = 0; j < strlen(deleteLineString); ++j) {
-        if (deleteLineString[j] < 48 || deleteLineString[j] > 57) {
+        if (deleteLineString[j] < 48 ||
+            deleteLineString[j] > 57) { // if the string contain numbers between 0 to 9 in the ASCII table
             testDelete = 0;
             break;
         } else {
             testDelete = 1;
         }
     }
-
     if (testDelete != 0) {
         FILE *file;
+        // OPEN THE MODULE FILE IN READ MODE
         file = fopen(fileModule, "r");
         char tempArray[240][240];
         char line[128][240];
         int index = 1;
         if (file != NULL) {
-            while (fgets(line[index], sizeof line, file) != NULL) {
-                strcpy(tempArray[index], line[index]);
+            while (fgets(line[index], sizeof line, file) != NULL) { // read the file line by line
+                strcpy(tempArray[index], line[index]); // copy the line in the tempArray in 2D
                 index++;
             }
         }
         fclose(file);
-        deleteLine = atoi(deleteLineString);
-        if (deleteLine < 1 || deleteLine >= indexDelete) {
+        deleteLine = atoi(deleteLineString); // convert string to int
+        if (deleteLine < 1 || deleteLine >= indexDelete) { // if the line no exist
             testDelete = 0;
         } else {
             testDelete = 1;
         }
-        if (testDelete != 0) {
+        if (testDelete != 0) { // if line exist
             FILE *f = NULL;
             f = fopen(fileModule, "w");
             for (int i = 1; i <= indexDelete; ++i) {
-                if (i != deleteLine) {
+                if (i != deleteLine) { // copie all only the line chose
                     fprintf(f, "%s", tempArray[i]);
                 }
             }
             fclose(f);
         }
-
     }
     indexDelete--;
     testDelete = 2;
@@ -356,7 +364,8 @@ void modifyRow() {
     int deleteLine;
     char assessementsModify[40];
     float weightingModify;
-    float grade;
+    float gradeModify;
+    // SELECT ALL VALUES OF A GRADE
     printf("\nSelect the line for modify :\n");
     scanf("%d", &deleteLine);
     printf("\nWrite assessements: \n");
@@ -364,15 +373,15 @@ void modifyRow() {
     printf("\nWrite weighting: \n");
     scanf("%f", &weightingModify);
     printf("\nWrite Grade: \n");
-    scanf("%f", &grade);
+    scanf("%f", &gradeModify);
     FILE *file;
     file = fopen(fileModule, "r");
     char tempArray[240][240];
     int kk = 1;
     char line[128][240];
     if (file != NULL) {
-        while (fgets(line[kk], sizeof line, file) != NULL) {
-            strcpy(tempArray[kk], line[kk]);
+        while (fgets(line[kk], sizeof line, file) != NULL) { // read the file line by line
+            strcpy(tempArray[kk], line[kk]); // copy the line in the tempArray in 2D
             kk++;
         }
     }
@@ -381,9 +390,9 @@ void modifyRow() {
     f = fopen(fileModule, "w");
     for (int i = 1; i <= kk; ++i) {
         if (i != deleteLine) {
-            fprintf(f, "%s", tempArray[i]);
+            fprintf(f, "%s", tempArray[i]);  // copie all only the line chose
         } else {
-            fprintf(f, "%.0f-%.0f-%s-\n", weightingModify, grade, assessementsModify);
+            fprintf(f, "%.0f-%.0f-%s-\n", weightingModify, gradeModify, assessementsModify); //  // copy values wrote in the line selected
         }
     }
     fclose(f);
@@ -392,11 +401,14 @@ void modifyRow() {
 int main() {
     system("cls");
     int testMenu = 1;
+
+    // CALL ALL FUNCTIONS
     moduleSelected_int = selectUpModule();
     numberLine = readModule();
     getStudentName();
     system("cls");
     result();
+    // RECALL SWITCH MENU IF A TEST == 0
     switch (menu) {
         case 3:
             if (testAdd == 0 || testAddGrade == 0) {
@@ -417,12 +429,14 @@ int main() {
 
         default:;
     }
+
+    // SELECT THE VALUE OF THE MENU
     printf("\n\n1 select an other UP number\n2 select an other module\n3 add a grade\n4 delete a grade\n5 modify a grade\n6 EXIT");
     printf("\n\nSELECT THE CORRESPONDING NUMBER");
     char menuString[1000];
     scanf("%s", menuString);
     for (int j = 0; j < strlen(menuString); ++j) {
-        if (studentID[j] < 48 || studentID[j] > 57) {
+        if (studentUP[j] < 48 || studentUP[j] > 57) { // if the string contain not numbers between 0 to 9 in the ASCII table
             testMenu = 0;
         }
     }
@@ -439,7 +453,8 @@ int main() {
         case 2:
             main();
             break;
-        case 3:    system("cls");
+        case 3:
+            system("cls");
             result();
             addRow();
             main();
